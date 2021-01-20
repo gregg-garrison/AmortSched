@@ -19,7 +19,7 @@ public class Main {
 		Date today = new Date();
 		LocalDate localStartDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
 		
-		Loan loan1 = new Loan(1,100000.0,0.05,360,today, 114000.0);
+		Loan loan1 = new Loan(1,200000.0,0.05,360,today, 200000.0);
 		Double principleInterestPayment = monthlyPayment(loan1.getInitialValue(),loan1.getRate()/12,loan1.getTerm());
 		Double pmi = getPmi(loan1);		
 		loan1.setPmi(pmi);
@@ -30,17 +30,32 @@ public class Main {
 		Double currentBalance = trans.getNewBalance();
 		loan1.setBalance(currentBalance);
 		
-		System.out.printf("%-8s %10s %10s %10s %10s %12s\n","Pmt#", "Pmt Date","Int Pmt", "Prin Pmt", "PMI", "Balance");
+		System.out.printf("%-8s %10s %10s %10s %10s %12s %12s %10s\n","Pmt#", "Pmt Date","Int Pmt", "Prin Pmt", "PMI", "Balance","AppraisalValue","LTV");
 		loan1.setSchedule(amort);
 		amort.forEach(System.out::print);
 		
+//		for(Transaction t:amort) {
+//			if(t.getPaymentNum()%12 == 0) {
+//				System.out.println("pmtNum: "+t.getPaymentNum());
+//			}
+//		}
 		
-		
-	
 	}
 	
 	//*****HELPER FUNCTIONS BELOW*******
 	
+	
+	public static Double appraisalIncrease(Loan loan) {
+		double appraisal = loan.getAppraisal();
+		List<Transaction> amort = loan.getSchedule();
+		for(Transaction t:amort) {
+			if(t.getPaymentNum() % 12 == 0) {
+				appraisal = appraisal * 1.03;
+				loan.setAppraisal(appraisal);
+			}
+		}
+		return appraisal;
+	}
 	
 	public static Double getPmi(Loan loan) {
 		Double initialValue = loan.getInitialValue();
@@ -57,11 +72,7 @@ public class Main {
 	
 	
 	public static Boolean pmiCheck(Double balance, Double appraisal) {
-		System.out.println("balance: "+balance);
-		System.out.println("appraisal: "+ appraisal);
-		Boolean status = (balance/appraisal) >= .8 ? true : false;
-		System.out.println(balance/appraisal);
-		return status;
+		return (balance/appraisal) >= .8 ? true : false;
 	}
 	
 	public static Transaction getCurrentStatement(List<Transaction> amort,Integer pmtNum) {
@@ -99,8 +110,13 @@ public class Main {
 		double pmi;
 		for(int i=1;i<=term;i++) {
 			paymentNum = i;
+			if(paymentNum % 12==0) {
+				appraisalValue = appraisalValue * 1.03;
+				loan.setAppraisal(appraisalValue);
+			}
 			LocalDate pmtDate = next(date,dayMonth);
-			if(principal / appraisalValue >= 0.8) {
+			double ltv = principal/appraisalValue;
+			if(ltv >= 0.8) {
 				pmi = ppmi;
 			}else {
 				pmi = 0.0;
@@ -109,7 +125,7 @@ public class Main {
 			principalPayment = payment - interestPayment;
 			newBalance = principal - principalPayment;
 			principal = newBalance;
-			trans = new Transaction(paymentNum,interestPayment,principalPayment,loan,newBalance,pmtDate,pmi);
+			trans = new Transaction(paymentNum,interestPayment,principalPayment,loan,newBalance,pmtDate,pmi,appraisalValue,ltv);
 			list.add(trans);
 			
 			loan.setBalance(newBalance);
