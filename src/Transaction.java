@@ -9,21 +9,26 @@ public class Transaction {
 	private Loan loan;
 	private Double newBalance;
 	private LocalDate paymentDate;
-
+	private Double pmi;
+	private Double appraisal;
+	private Double ltv;
 	public Transaction() {}
 
 	public Transaction(Integer paymentNum, Double interestPayment, Double principalPayment, 
-			Loan loan, Double newBalance,LocalDate paymentDate) {
+			Loan loan, Double newBalance,LocalDate paymentDate, Double pmi, Double appraisal, Double ltv) {
 		this.paymentNum = paymentNum;
 		this.interestPayment = interestPayment;
 		this.principalPayment = principalPayment;
 		this.loan = loan;
 		this.newBalance = newBalance;
 		this.paymentDate = paymentDate;
+		this.pmi = pmi;
+		this.appraisal = appraisal;
+		this.ltv = ltv;
 	}
 
 	public Transaction(Integer loanTransactionId, Integer paymentNum, Double interestPayment, Double principalPayment,
-			Loan loan, Double newBalance, LocalDate paymentDate) {
+			Loan loan, Double newBalance, LocalDate paymentDate, Double pmi) {
 		super();
 		this.loanTransactionId = loanTransactionId;
 		this.paymentNum = paymentNum;
@@ -32,6 +37,33 @@ public class Transaction {
 		this.loan = loan;
 		this.newBalance = newBalance;
 		this.paymentDate = paymentDate;
+		this.pmi = pmi;
+	}
+
+	
+	
+	public Double getLtv() {
+		return ltv;
+	}
+
+	public void setLtv(Double ltv) {
+		this.ltv = ltv;
+	}
+
+	public Double getAppraisal() {
+		return appraisal;
+	}
+
+	public void setAppraisal(Double appraisal) {
+		this.appraisal = appraisal;
+	}
+
+	public Double getPmi() {
+		return pmi;
+	}
+
+	public void setPmi(Double pmi) {
+		this.pmi = pmi;
 	}
 
 	public Integer getLoanTransactionId() {
@@ -92,6 +124,6 @@ public class Transaction {
 	
 	public String toString() {
 		String dt = this.getPaymentDate().toString();
-		return String.format("%8d %10s %10.2f %10.2f %12.2f\n",this.getPaymentNum(),dt,this.getInterestPayment(),this.getPrincipalPayment(),this.getNewBalance());
+		return String.format("%-8d %10s %10.2f %10.2f %10.2f %12.2f %12.2f %10.2f\n",this.getPaymentNum(),dt,this.getInterestPayment(),this.getPrincipalPayment(),this.getPmi(),this.getNewBalance(),this.getAppraisal(),this.getLtv());
 	}
 }
