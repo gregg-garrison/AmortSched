@@ -9,16 +9,35 @@ public class Loan {
 	private Date startDate;
 	private Date endDate;
 	private Double balance;
+	private Double appraisal;
+	private Double pmi;
 	private List<Transaction> schedule;
 	
 	public Loan() {}
 
-	public Loan(Integer id, Double initialValue, Double rate, Integer term, Date startDate) {
+	public Loan(Integer id, Double initialValue, Double rate, Integer term, Date startDate, Double appraisal) {
 		this.id = id;
 		this.initialValue = initialValue;
 		this.rate = rate;
 		this.term = term;
 		this.startDate = startDate;
+		this.appraisal = appraisal;
+	}
+
+	public Double getPmi() {
+		return pmi;
+	}
+
+	public void setPmi(Double pmi) {
+		this.pmi = pmi;
+	}
+
+	public Double getAppraisal() {
+		return appraisal;
+	}
+
+	public void setAppraisal(Double appraisal) {
+		this.appraisal = appraisal;
 	}
 
 	public Double getBalance() {

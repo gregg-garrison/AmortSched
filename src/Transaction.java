@@ -9,21 +9,23 @@ public class Transaction {
 	private Loan loan;
 	private Double newBalance;
 	private LocalDate paymentDate;
+	private Double pmi;
 
 	public Transaction() {}
 
 	public Transaction(Integer paymentNum, Double interestPayment, Double principalPayment, 
-			Loan loan, Double newBalance,LocalDate paymentDate) {
+			Loan loan, Double newBalance,LocalDate paymentDate, Double pmi) {
 		this.paymentNum = paymentNum;
 		this.interestPayment = interestPayment;
 		this.principalPayment = principalPayment;
 		this.loan = loan;
 		this.newBalance = newBalance;
 		this.paymentDate = paymentDate;
+		this.pmi = pmi;
 	}
 
 	public Transaction(Integer loanTransactionId, Integer paymentNum, Double interestPayment, Double principalPayment,
-			Loan loan, Double newBalance, LocalDate paymentDate) {
+			Loan loan, Double newBalance, LocalDate paymentDate, Double pmi) {
 		super();
 		this.loanTransactionId = loanTransactionId;
 		this.paymentNum = paymentNum;
@@ -32,6 +34,17 @@ public class Transaction {
 		this.loan = loan;
 		this.newBalance = newBalance;
 		this.paymentDate = paymentDate;
+		this.pmi = pmi;
+	}
+
+	
+	
+	public Double getPmi() {
+		return pmi;
+	}
+
+	public void setPmi(Double pmi) {
+		this.pmi = pmi;
 	}
 
 	public Integer getLoanTransactionId() {
@@ -92,6 +105,6 @@ public class Transaction {
 	
 	public String toString() {
 		String dt = this.getPaymentDate().toString();
-		return String.format("%8d %10s %10.2f %10.2f %12.2f\n",this.getPaymentNum(),dt,this.getInterestPayment(),this.getPrincipalPayment(),this.getNewBalance());
+		return String.format("%-8d %10s %10.2f %10.2f %10.2f %12.2f\n",this.getPaymentNum(),dt,this.getInterestPayment(),this.getPrincipalPayment(),this.getPmi(),this.getNewBalance());
 	}
 }
